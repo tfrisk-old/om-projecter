@@ -100,6 +100,13 @@
         (dom/li nil (str (:name project))
         (om/build project-details project))))))
 
+(defn list-view [entry owner]
+  (reify
+    om/IRender
+    (render [_]
+      (dom/div nil
+        (dom/li nil (str (:name entry)))))))
+
 (defn projects-view [app owner]
   (reify
     om/IRender
@@ -107,7 +114,14 @@
       (dom/div nil
         (dom/h2 nil "Projects list")
         (apply dom/ul nil
-          (om/build-all project-view (:projects app)))))))
+          (om/build-all project-view (:projects app)))
+        (dom/h2 nil "Users")
+        (apply dom/ul nil
+          (om/build-all list-view (:users app)))
+        (dom/h2 nil "Roles")
+        (apply dom/ul nil
+          (om/build-all list-view (:roles app)))
+        ))))
 
 (om/root projects-view app-state
   {:target (. js/document (getElementById "app"))})
