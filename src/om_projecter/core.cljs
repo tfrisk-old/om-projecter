@@ -66,8 +66,26 @@
             (apply dom/ul nil
               (map #(dom/li nil (get-user-name (:user %))) (:members project))))
           (dom/li nil "tasks"
-            (apply dom/ul nil
-              (map #(dom/li nil (:name %)) (:tasks project))))
+            (dom/table nil
+              (apply dom/tr nil
+                (dom/th nil "name")
+                (dom/th nil "start week")
+                (dom/th nil "end week")
+                (dom/th nil "users")
+                (dom/th nil "done?")
+              (map (fn [task]
+                (dom/tr nil
+                (dom/td nil (:name task))
+                (dom/td nil (:start_week task))
+                (dom/td nil (:end_week task))
+                ;(dom/td nil (apply str
+                ;  (map (fn [uid] (get-user-name uid))
+                ;    (:users task))))
+                (dom/td nil (apply dom/ul nil
+                  (map (fn [uid] (dom/li nil (get-user-name uid)))
+                    (:users task))))
+                (dom/td nil (str (:done task)))
+                )) (:tasks project)))))
           )))))
 
 (defn project-view [project owner]
