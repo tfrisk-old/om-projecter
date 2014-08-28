@@ -105,34 +105,38 @@
           (dom/li nil (str "start date: " (:start_date project)))
           (dom/li nil (str "end date: " (:end_date project)))
           (dom/li nil (str "priority: " (:priority project)))
-          (dom/li nil "members"
-            (dom/table nil
-              (apply dom/tr nil
-                (dom/th nil "user")
-                (dom/th nil "role")
-              (map (fn [member]
-                (dom/tr nil
-                (dom/td nil (get-user-name (:user member)))
-                (dom/td nil (get-role-name (:role member)))))
-                (:members project)))))
-          (dom/li nil "tasks"
-            (dom/table nil
-              (apply dom/tr nil
-                (dom/th nil "name")
-                (dom/th nil "start week")
-                (dom/th nil "end week")
-                (dom/th nil "users")
-                (dom/th nil "done?")
-              (map (fn [task]
-                (dom/tr nil
-                (dom/td nil (:name task))
-                (dom/td nil (:start_week task))
-                (dom/td nil (:end_week task))
-                (dom/td nil (apply dom/ul nil
-                  (map (fn [uid] (dom/li nil (get-user-name uid)))
-                    (:users task))))
-                (dom/td nil (str (:done task)))
-                )) (:tasks project)))))
+          (if (:members project)
+            (dom/li nil "members"
+              (dom/table nil
+                (apply dom/tr nil
+                  (dom/th nil "user")
+                  (dom/th nil "role")
+                (map (fn [member]
+                  (dom/tr nil
+                  (dom/td nil (get-user-name (:user member)))
+                  (dom/td nil (get-role-name (:role member)))))
+                  (:members project)))))
+            (dom/li nil "no members"))
+          (if (:tasks project)
+            (dom/li nil "tasks"
+              (dom/table nil
+                (apply dom/tr nil
+                  (dom/th nil "name")
+                  (dom/th nil "start week")
+                  (dom/th nil "end week")
+                  (dom/th nil "users")
+                  (dom/th nil "done?")
+                (map (fn [task]
+                  (dom/tr nil
+                  (dom/td nil (:name task))
+                  (dom/td nil (:start_week task))
+                  (dom/td nil (:end_week task))
+                  (dom/td nil (apply dom/ul nil
+                    (map (fn [uid] (dom/li nil (get-user-name uid)))
+                      (:users task))))
+                  (dom/td nil (str (:done task)))
+                  )) (:tasks project)))))
+            (dom/li nil "no tasks"))
           )))))
 
 (defn project-view [project owner]
